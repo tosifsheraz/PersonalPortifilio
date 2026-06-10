@@ -6,14 +6,15 @@ import { AnimatedLine } from '../ui/AnimatedLine'
 import { ThumbtackPin } from '../ui/ThumbtackPin'
 import { staggerContainerVariant, staggerFastVariant, scaleUpVariant } from '../../lib/animations'
 
-const CATEGORIES = ['Languages', 'Frontend', 'Backend', 'AI/ML', 'Tools']
+const CATEGORIES = ['Languages', 'Frontend', 'Backend', 'AI/ML', 'DevOps', 'UI/UX']
 
 const categoryConfig = {
   Languages: { color: 'text-mm-orange', border: 'border-mm-orange/30', dot: 'bg-mm-orange', hex: '#F6851B' },
   Frontend: { color: 'text-mm-blue-light', border: 'border-mm-blue/30', dot: 'bg-mm-blue-light', hex: '#1098FC' },
   Backend: { color: 'text-emerald-400', border: 'border-emerald-400/30', dot: 'bg-emerald-400', hex: '#34D399' },
   'AI/ML': { color: 'text-purple-400', border: 'border-purple-400/30', dot: 'bg-purple-400', hex: '#C084FC' },
-  Tools: { color: 'text-mm-muted', border: 'border-mm-border', dot: 'bg-mm-muted', hex: '#8A8A8E' },
+  DevOps: { color: 'text-red-400', border: 'border-red-400/30', dot: 'bg-red-400', hex: '#F87171' },
+  'UI/UX': { color: 'text-pink-400', border: 'border-pink-400/30', dot: 'bg-pink-400', hex: '#F472B6' },
 }
 
 export function SkillsGrid({ skills }) {

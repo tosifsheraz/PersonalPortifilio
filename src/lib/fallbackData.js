@@ -20,20 +20,50 @@ export const fallbackConfig = {
 }
 
 export const fallbackSkills = [
+  // Languages
   { id: '1', name: 'Python', category: 'Languages', order_index: 1 },
   { id: '2', name: 'C', category: 'Languages', order_index: 2 },
   { id: '3', name: 'C++', category: 'Languages', order_index: 3 },
   { id: '4', name: 'JavaScript', category: 'Languages', order_index: 4 },
   { id: '5', name: 'Dart', category: 'Languages', order_index: 5 },
   { id: '6', name: 'SQL', category: 'Languages', order_index: 6 },
+  { id: '23', name: 'Java', category: 'Languages', order_index: 7 },
+  
+  // Frontend
   { id: '7', name: 'React', category: 'Frontend', order_index: 1 },
-  { id: '8', name: 'Node.js', category: 'Frontend', order_index: 2 },
-  { id: '9', name: 'Express', category: 'Backend', order_index: 1 },
-  { id: '10', name: 'FastAPI', category: 'Backend', order_index: 2 },
-  { id: '11', name: 'Flutter', category: 'Tools', order_index: 1 },
+  { id: '24', name: 'Vite', category: 'Frontend', order_index: 2 },
+  { id: '25', name: 'Flutter', category: 'Frontend', order_index: 3 },
+  { id: '26', name: 'Tailwind CSS', category: 'Frontend', order_index: 4 },
+  { id: '27', name: 'Three.js', category: 'Frontend', order_index: 5 },
+  { id: '28', name: 'HTML/CSS', category: 'Frontend', order_index: 6 },
+  
+  // Backend
+  { id: '29', name: 'Node.js', category: 'Backend', order_index: 1 },
+  { id: '9', name: 'Express', category: 'Backend', order_index: 2 },
+  { id: '10', name: 'FastAPI', category: 'Backend', order_index: 3 },
+  { id: '30', name: 'Data Pipelines', category: 'Backend', order_index: 4 },
+  { id: '31', name: 'PostgreSQL', category: 'Backend', order_index: 5 },
+  { id: '32', name: 'Cloud Platforms', category: 'Backend', order_index: 6 },
+  
+  // AI/ML
   { id: '12', name: 'PyTorch', category: 'AI/ML', order_index: 1 },
   { id: '13', name: 'YOLO', category: 'AI/ML', order_index: 2 },
   { id: '14', name: 'OpenCV', category: 'AI/ML', order_index: 3 },
+  { id: '33', name: 'Applied GenAI', category: 'AI/ML', order_index: 4 },
+  { id: '34', name: 'Neural Network Training', category: 'AI/ML', order_index: 5 },
+  { id: '35', name: 'Model Fine-Tuning', category: 'AI/ML', order_index: 6 },
+  { id: '36', name: 'Data Scrapping', category: 'AI/ML', order_index: 7 },
+  
+  // DevOps & Systems
+  { id: '37', name: 'Git & GitHub', category: 'DevOps', order_index: 1 },
+  { id: '38', name: 'Cloud & Hosting', category: 'DevOps', order_index: 2 },
+  { id: '39', name: 'Arch Linux', category: 'DevOps', order_index: 3 },
+  { id: '40', name: 'Containerization', category: 'DevOps', order_index: 4 },
+  
+  // UI/UX & Styling
+  { id: '41', name: 'Tailwind CSS', category: 'UI/UX', order_index: 1 },
+  { id: '42', name: 'Responsive Web Design', category: 'UI/UX', order_index: 2 },
+  { id: '43', name: 'Interactive Designs', category: 'UI/UX', order_index: 3 },
 ]
 
 export const fallbackProjects = [
