@@ -11,7 +11,7 @@ function normalizeConfig(raw) {
   if (!raw) return null
   return {
     ...raw,
-    taglines: raw.taglines || (raw.tagline ? [raw.tagline, 'AI Enthusiast', 'Open Source Builder'] : fallbackConfig.taglines),
+    taglines: raw.taglines || (raw.tagline ? raw.tagline.split(',').map(t => t.trim()).filter(Boolean) : fallbackConfig.taglines),
   }
 }
 

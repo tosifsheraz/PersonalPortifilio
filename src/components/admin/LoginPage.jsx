@@ -11,16 +11,15 @@ export function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [config, setConfig] = useState(null)
   const { signIn } = useAuth()
   const navigate = useNavigate()
-
-  useEffect(() => {
-    if (!supabaseReady) return
-    supabase.from('site_config').select('login_title, login_subtitle, login_email_placeholder, login_password_placeholder, login_button_text, login_button_loading_text, login_error_prefix').single().then(({ data }) => {
-      if (data) setConfig(data)
-    })
-  }, [])
+  const loginTitle = 'Admin Login'
+  const loginSubtitle = 'Enter your credentials'
+  const emailPlaceholder = 'Email'
+  const passwordPlaceholder = 'Password'
+  const buttonText = 'Sign In'
+  const buttonLoadingText = 'Signing in...'
+  const loginErrorPrefix = 'Error: '
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -28,20 +27,12 @@ export function LoginPage() {
     setLoading(true)
     const err = await signIn(email, password)
     if (err) {
-      const prefix = config?.login_error_prefix || 'Error: '
-      setError(prefix + err.message)
+      setError(loginErrorPrefix + err.message)
       setLoading(false)
       return
     }
     navigate('/admin/dashboard')
   }
-
-  const loginTitle = config?.login_title || 'Admin Login'
-  const loginSubtitle = config?.login_subtitle || ''
-  const emailPlaceholder = config?.login_email_placeholder || 'Email'
-  const passwordPlaceholder = config?.login_password_placeholder || 'Password'
-  const buttonText = config?.login_button_text || 'Sign In'
-  const buttonLoadingText = config?.login_button_loading_text || 'Signing in...'
 
   const inputClass = 'w-full border border-mm-border bg-mm-card px-4 py-3 font-mono text-sm text-mm-white placeholder-mm-muted focus:outline-none focus:border-mm-orange transition-colors duration-200'
 
