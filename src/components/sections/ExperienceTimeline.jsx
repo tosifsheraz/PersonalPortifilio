@@ -27,179 +27,152 @@ const typeConfig = {
   },
 }
 
+function ExperienceCard({ exp, cfg }) {
+  return (
+    <div
+      className={`relative p-6 md:p-8 bg-gradient-to-br ${cfg.bgGradient} backdrop-blur-sm`}
+      style={{
+        border: `3px solid ${cfg.borderColor}`,
+        backgroundColor: '#2A2A2E',
+        boxShadow: `10px 10px 0px 0px #1C1C1E`,
+      }}
+    >
+      <div className="absolute inset-0 bg-mm-surface/90" style={{ zIndex: -1 }} />
+      
+      <div className="relative z-10">
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <h3 className="font-display font-black text-xl md:text-2xl text-mm-white group-hover:text-gradient-orange transition-all duration-300">
+            {exp.role}
+          </h3>
+          <span
+            className={`px-2 py-1 md:px-3 md:py-1.5 font-mono text-xs ${cfg.labelColor} font-bold uppercase tracking-wider shrink-0`}
+            style={{
+              border: `2px solid ${cfg.borderColor}`,
+              backgroundColor: `${cfg.hex}30`,
+              boxShadow: `0 0 20px ${cfg.hex}50`,
+            }}
+          >
+            {exp.type}
+          </span>
+        </div>
+        
+        <p className={`font-mono text-base md:text-lg ${cfg.labelColor} mb-2 font-semibold`}>
+          {exp.organization}
+        </p>
+        
+        <p className="font-mono text-sm text-mm-muted mb-4 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-mm-orange" />
+          {exp.duration}
+        </p>
+        
+        <p className="font-mono text-sm md:text-base text-mm-white/90 leading-relaxed">
+          {exp.description}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function TimelineDot({ cfg, index }) {
+  return (
+    <motion.div
+      initial={{ scale: 0, rotate: -180 }}
+      whileInView={{ scale: 1, rotate: 0 }}
+      viewport={{ once: false }}
+      transition={{ duration: 0.5, delay: 0.2 + index * 0.1, type: 'spring' }}
+      className={`w-6 h-6 rounded-full ${cfg.dotBg} relative z-10`}
+      style={{ boxShadow: `0 0 30px ${cfg.hex}` }}
+    >
+      <motion.div
+        className="absolute inset-0 rounded-full"
+        style={{ background: cfg.hex }}
+        animate={{ scale: [1, 2, 1], opacity: [0.6, 0, 0.6] }}
+        transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
+      />
+    </motion.div>
+  )
+}
+
 function TimelineEntry({ exp, index }) {
   const isLeft = index % 2 === 0
   const cfg = typeConfig[exp.type] || typeConfig.work
 
   return (
     <div className="relative mb-20 last:mb-0">
-      <div className={`grid grid-cols-1 md:grid-cols-[1fr_60px_1fr] gap-8 items-center`}>
+      {/* Mobile layout - simple vertical stack */}
+      <div className="block md:hidden">
+        <motion.div
+          initial={{ y: 40, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="relative group"
+        >
+          <div className="flex justify-center mb-4">
+            <TimelineDot cfg={cfg} index={index} />
+          </div>
+          <ExperienceCard exp={exp} cfg={cfg} />
+        </motion.div>
+      </div>
+
+      {/* Desktop layout - alternating left/right grid */}
+      <div className="hidden md:grid md:grid-cols-[1fr_60px_1fr] gap-8 items-center">
         {isLeft ? (
           <>
             <motion.div
-              initial={{ x: -400, opacity: 0, rotate: -10 }}
-              whileInView={{ x: 0, opacity: 1, rotate: 0 }}
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: false, amount: 0.3 }}
               transition={{ duration: 0.7, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="relative group"
             >
-              <div
-                className={`relative p-8 bg-gradient-to-br ${cfg.bgGradient} backdrop-blur-sm`}
+              <ExperienceCard exp={exp} cfg={cfg} />
+              <motion.div
+                className="absolute top-1/2 -right-12 w-12 h-[3px]"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: false }}
+                transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                 style={{
-                  border: `3px solid ${cfg.borderColor}`,
-                  backgroundColor: '#2A2A2E',
-                  boxShadow: `10px 10px 0px 0px #1C1C1E`,
+                  transformOrigin: 'left',
+                  background: `linear-gradient(to right, ${cfg.hex}, transparent)`,
                 }}
-              >
-                <div className="absolute inset-0 bg-mm-surface/90" style={{ zIndex: -1 }} />
-                
-                <div className="relative z-10">
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <h3 className="font-display font-black text-2xl text-mm-white group-hover:text-gradient-orange transition-all duration-300">
-                      {exp.role}
-                    </h3>
-                    <span
-                      className={`px-3 py-1.5 font-mono text-xs ${cfg.labelColor} font-bold uppercase tracking-wider shrink-0`}
-                      style={{
-                        border: `2px solid ${cfg.borderColor}`,
-                        backgroundColor: `${cfg.hex}30`,
-                        boxShadow: `0 0 20px ${cfg.hex}50`,
-                      }}
-                    >
-                      {exp.type}
-                    </span>
-                  </div>
-                  
-                  <p className={`font-mono text-lg ${cfg.labelColor} mb-2 font-semibold`}>
-                    {exp.organization}
-                  </p>
-                  
-                  <p className="font-mono text-sm text-mm-muted mb-4 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-mm-orange" />
-                    {exp.duration}
-                  </p>
-                  
-                  <p className="font-mono text-base text-mm-white/90 leading-relaxed">
-                    {exp.description}
-                  </p>
-                </div>
-
-                <motion.div
-                  className="absolute top-1/2 -right-12 w-12 h-[3px]"
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: false }}
-                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  style={{
-                    transformOrigin: 'left',
-                    background: `linear-gradient(to right, ${cfg.hex}, transparent)`,
-                  }}
-                />
-              </div>
+              />
             </motion.div>
 
-            <div className="hidden md:flex items-center justify-center">
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                viewport={{ once: false }}
-                transition={{ duration: 0.5, delay: 0.2 + index * 0.1, type: 'spring' }}
-                className={`w-6 h-6 rounded-full ${cfg.dotBg} relative z-10`}
-                style={{ boxShadow: `0 0 30px ${cfg.hex}` }}
-              >
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{ background: cfg.hex }}
-                  animate={{ scale: [1, 2, 1], opacity: [0.6, 0, 0.6] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-                />
-              </motion.div>
+            <div className="flex items-center justify-center">
+              <TimelineDot cfg={cfg} index={index} />
             </div>
 
-            <div className="hidden md:block" />
+            <div />
           </>
         ) : (
           <>
-            <div className="hidden md:block" />
+            <div />
 
-            <div className="hidden md:flex items-center justify-center">
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                viewport={{ once: false }}
-                transition={{ duration: 0.5, delay: 0.2 + index * 0.1, type: 'spring' }}
-                className={`w-6 h-6 rounded-full ${cfg.dotBg} relative z-10`}
-                style={{ boxShadow: `0 0 30px ${cfg.hex}` }}
-              >
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{ background: cfg.hex }}
-                  animate={{ scale: [1, 2, 1], opacity: [0.6, 0, 0.6] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-                />
-              </motion.div>
+            <div className="flex items-center justify-center">
+              <TimelineDot cfg={cfg} index={index} />
             </div>
 
             <motion.div
-              initial={{ x: 400, opacity: 0, rotate: 10 }}
-              whileInView={{ x: 0, opacity: 1, rotate: 0 }}
+              initial={{ x: 100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: false, amount: 0.3 }}
               transition={{ duration: 0.7, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="relative group"
             >
-              <div
-                className={`relative p-8 bg-gradient-to-br ${cfg.bgGradient} backdrop-blur-sm`}
+              <ExperienceCard exp={exp} cfg={cfg} />
+              <motion.div
+                className="absolute top-1/2 -left-12 w-12 h-[3px]"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: false }}
+                transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                 style={{
-                  border: `3px solid ${cfg.borderColor}`,
-                  backgroundColor: '#2A2A2E',
-                  boxShadow: `10px 10px 0px 0px #1C1C1E`,
+                  transformOrigin: 'right',
+                  background: `linear-gradient(to left, ${cfg.hex}, transparent)`,
                 }}
-              >
-                <div className="absolute inset-0 bg-mm-surface/90" style={{ zIndex: -1 }} />
-                
-                <div className="relative z-10">
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <h3 className="font-display font-black text-2xl text-mm-white group-hover:text-gradient-orange transition-all duration-300">
-                      {exp.role}
-                    </h3>
-                    <span
-                      className={`px-3 py-1.5 font-mono text-xs ${cfg.labelColor} font-bold uppercase tracking-wider shrink-0`}
-                      style={{
-                        border: `2px solid ${cfg.borderColor}`,
-                        backgroundColor: `${cfg.hex}30`,
-                        boxShadow: `0 0 20px ${cfg.hex}50`,
-                      }}
-                    >
-                      {exp.type}
-                    </span>
-                  </div>
-                  
-                  <p className={`font-mono text-lg ${cfg.labelColor} mb-2 font-semibold`}>
-                    {exp.organization}
-                  </p>
-                  
-                  <p className="font-mono text-sm text-mm-muted mb-4 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-mm-orange" />
-                    {exp.duration}
-                  </p>
-                  
-                  <p className="font-mono text-base text-mm-white/90 leading-relaxed">
-                    {exp.description}
-                  </p>
-                </div>
-
-                <motion.div
-                  className="absolute top-1/2 -left-12 w-12 h-[3px]"
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: false }}
-                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  style={{
-                    transformOrigin: 'right',
-                    background: `linear-gradient(to left, ${cfg.hex}, transparent)`,
-                  }}
-                />
-              </div>
+              />
             </motion.div>
           </>
         )}
@@ -235,7 +208,7 @@ export function ExperienceTimeline({ experiences }) {
   }
 
   return (
-    <section id="experience" className="py-32 px-6 bg-mm-bg border-b border-mm-border relative overflow-hidden">
+    <section id="experience" className="py-32 px-6 bg-mm-bg border-b border-mm-border relative overflow-x-clip">
       <div className="absolute top-0 left-1/2 w-96 h-96 bg-mm-orange/5 blur-3xl pointer-events-none -translate-x-1/2 animate-pulse" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-mm-blue/5 blur-3xl pointer-events-none animate-pulse" style={{ animationDelay: '1s' }} />
 
