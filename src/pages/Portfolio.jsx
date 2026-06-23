@@ -45,7 +45,9 @@ export function Portfolio() {
   return (
     <>
       <Sparkles />
-      <TarsRobot />
+      <div className="hidden md:block">
+        <TarsRobot />
+      </div>
       <Navbar name={config?.name} />
       <DotNavigation />
       <main className="pt-14">
