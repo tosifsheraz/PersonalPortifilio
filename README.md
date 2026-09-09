@@ -1,6 +1,6 @@
 # Portfolio CMS
 
-A modern, interactive portfolio website with a powerful admin CMS built with React, Vite, and Supabase. Features smooth animations, real-time data updates.
+A modern, interactive portfolio website built with React, Vite, and Supabase. Features smooth animations, real-time data updates.
 
 ## Features
 
@@ -23,7 +23,6 @@ A modern, interactive portfolio website with a powerful admin CMS built with Rea
 ```
 src/
 ├── components/
-│   ├── admin/          # Admin panel components (CRUD, auth, panels)
 │   ├── sections/       # Portfolio sections (Hero, About, Projects, etc.)
 │   └── ui/             # Reusable UI components (Navbar, Footer, buttons, etc.)
 ├── context/            # React Context for state management (Auth)
