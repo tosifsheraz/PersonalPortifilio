@@ -1,17 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { supabase, supabaseReady } from '../lib/supabase'
-import {
-  fallbackConfig,
-  fallbackSkills,
-  fallbackProjects,
-  fallbackExperience,
-} from '../lib/fallbackData'
+
+const RETRY_BASE_DELAY = 1500 // ms
+const RETRY_MAX_DELAY = 10000 // ms
 
 function normalizeConfig(raw) {
   if (!raw) return null
   return {
     ...raw,
-    taglines: raw.taglines || (raw.tagline ? raw.tagline.split(',').map(t => t.trim()).filter(Boolean) : fallbackConfig.taglines),
+    taglines: raw.taglines || (raw.tagline ? raw.tagline.split(',').map(t => t.trim()).filter(Boolean) : []),
   }
 }
 
@@ -21,18 +18,17 @@ export function usePortfolioData() {
   const [experience, setExperience] = useState([])
   const [config, setConfig] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const retryCount = useRef(0)
+  const retryTimer = useRef(null)
 
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     setLoading(true)
-    setError(null)
 
     if (!supabaseReady) {
-      setProjects(fallbackProjects)
-      setSkills(fallbackSkills)
-      setExperience(fallbackExperience)
-      setConfig(fallbackConfig)
-      setLoading(false)
+      // Supabase not configured — keep retrying in case env vars load late
+      const delay = Math.min(RETRY_BASE_DELAY * Math.pow(2, retryCount.current), RETRY_MAX_DELAY)
+      retryCount.current += 1
+      retryTimer.current = setTimeout(() => fetchData(), delay)
       return
     }
 
@@ -48,24 +44,29 @@ export function usePortfolioData() {
         if (result.error) throw result.error
       }
 
+      // Success — reset retry counter and stop loading
+      retryCount.current = 0
       setProjects(projectsResult.data)
       setSkills(skillsResult.data)
       setExperience(expResult.data)
       setConfig(normalizeConfig(configResult.data))
-    } catch (err) {
-      setError(err.message)
-      setProjects(fallbackProjects)
-      setSkills(fallbackSkills)
-      setExperience(fallbackExperience)
-      setConfig(fallbackConfig)
-    } finally {
       setLoading(false)
+    } catch {
+      // Supabase slow or errored — retry with exponential backoff (capped)
+      const delay = Math.min(RETRY_BASE_DELAY * Math.pow(2, retryCount.current), RETRY_MAX_DELAY)
+      retryCount.current += 1
+      retryTimer.current = setTimeout(() => fetchData(), delay)
     }
-  }
+  }, [])
 
   useEffect(() => {
     fetchData()
-  }, [])
+    return () => {
+      if (retryTimer.current) clearTimeout(retryTimer.current)
+    }
+  }, [fetchData])
 
-  return { projects, skills, experience, config, loading, error, refresh: fetchData }
+  return { projects, skills, experience, config, loading, refresh: fetchData }
 }
+
+
